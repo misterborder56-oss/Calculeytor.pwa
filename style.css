@@ -1,0 +1,112 @@
+body {
+  margin:0;
+  font-family: 'Arial', sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+.calculator-container {
+  background: rgba(0,0,0,0.85);
+  padding: 20px;
+  border-radius: 15px;
+  text-align:center;
+  width:320px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  transition: background 0.3s;
+}
+
+#screen {
+  width:100%;
+  height:60px;
+  font-size:1.8rem;
+  margin-bottom:15px;
+  text-align:right;
+  padding:10px;
+  border-radius:8px;
+  background-color: rgba(0,0,0,0.9);
+  color:#fff;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+  transition: background 0.3s, color 0.3s;
+}
+
+#scientific {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:10px;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow:hidden;
+  max-height:0;
+  opacity:0;
+}
+#scientific button { width:60px; margin:5px; }
+#scientific:not(.hidden) { max-height:200px; opacity:1; }
+
+button {
+  width:70px;
+  height:60px;
+  margin:5px;
+  font-size:1.3rem;
+  cursor:pointer;
+  border:none;
+  border-radius:8px;
+  background-color:#333;
+  color:#fff;
+  transition: all 0.2s;
+  box-shadow: 0 4px #222;
+}
+button:hover { background-color:#555; transform: translateY(-2px);}
+button:active { transform: translateY(2px); box-shadow:0 2px #222; }
+.equals { background-color:#0a84ff; color:#fff; }
+.sci-toggle { margin-bottom:10px; width:100%; background-color:#ff9500; color:#fff; }
+
+#historyList {
+  max-height:120px;
+  overflow-y:auto;
+  text-align:left;
+  background: rgba(50,50,50,0.8);
+  padding:8px;
+  border-radius:8px;
+  margin:10px 0;
+  font-size:0.9rem;
+}
+.clear-history { background-color:#ff3b30; width:100%; margin-bottom:10px; }
+
+.theme-light { background:#eee; color:#000; }
+.theme-light #screen { background:#fff; color:#000; }
+.theme-light button { background:#ddd; color:#000; }
+.theme-light button:hover { background:#bbb; }
+
+.theme-dark { background:#111; color:#fff; }
+.theme-dark #screen { background:#222; color:#fff; }
+.theme-dark button { background:#333; color:#fff; }
+.theme-dark button:hover { background:#555; }
+
+.theme-neon { background:#000; color:#0ff; }
+.theme-neon #screen { color:#0ff; }
+.theme-neon button { color:#0ff; border:1px solid #0ff; background:#111; }
+.theme-neon button:hover { background:#0ff; color:#000; }
+
+.neon-green { background:#000; color:#0f0; }
+.neon-green #screen { color:#0f0; }
+.neon-green button { color:#0f0; border:1px solid #0f0; background:#111; }
+.neon-green button:hover { color:#000; background:#0f0; }
+
+.neon-pink { background:#000; color:#ff00ff; }
+.neon-pink #screen { color:#ff00ff; }
+.neon-pink button { color:#ff00ff; border:1px solid #ff00ff; background:#111; }
+.neon-pink button:hover { color:#000; background:#ff00ff; }
+
+.neon-orange { background:#000; color:#ffa500; }
+.neon-orange #screen { color:#ffa500; }
+.neon-orange button { color:#ffa500; border:1px solid #ffa500; background:#111; }
+.neon-orange button:hover { color:#000; background:#ffa500; }
+
+@media(max-width:400px){
+  .calculator-container { width:90%; padding:15px; }
+  button { width:60px; height:50px; font-size:1.1rem; }
+  #screen { height:50px; font-size:1.5rem; }
+}

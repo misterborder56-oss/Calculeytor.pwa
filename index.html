@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora PWA</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+</head>
+<body class="theme-dark">
+
+<div class="calculator-container">
+
+  <!-- PANTALLA -->
+  <input type="text" id="screen" readonly placeholder="0">
+
+  <!-- MODO CIENTÍFICO -->
+  <button onclick="toggleSci()" class="sci-toggle">Modo Científico</button>
+  <div id="scientific" class="hidden">
+    <button onclick="sci('sin')">sin</button>
+    <button onclick="sci('cos')">cos</button>
+    <button onclick="sci('tan')">tan</button>
+    <button onclick="sci('sqrt')">√</button>
+    <button onclick="sci('pow')">x²</button>
+    <button onclick="sci('pi')">π</button>
+  </div>
+
+  <!-- TECLADO -->
+  <div class="buttons">
+    <button onclick="clearAll()">C</button>
+    <button onclick="del()">DEL</button>
+    <button onclick="add('%')">%</button>
+    <button onclick="add('÷')">÷</button>
+
+    <button onclick="add('7')">7</button>
+    <button onclick="add('8')">8</button>
+    <button onclick="add('9')">9</button>
+    <button onclick="add('×')">×</button>
+
+    <button onclick="add('4')">4</button>
+    <button onclick="add('5')">5</button>
+    <button onclick="add('6')">6</button>
+    <button onclick="add('-')">-</button>
+
+    <button onclick="add('1')">1</button>
+    <button onclick="add('2')">2</button>
+    <button onclick="add('3')">3</button>
+    <button onclick="add('+')">+</button>
+
+    <button onclick="add('0')">0</button>
+    <button onclick="add('.')">.</button>
+    <button onclick="calc()" class="equals">=</button>
+  </div>
+
+  <!-- HISTORIAL -->
+  <h3>Historial</h3>
+  <ul id="historyList"></ul>
+  <button onclick="clearHistory()" class="clear-history">Borrar historial</button>
+
+  <!-- TEMAS -->
+  <h3>Temas</h3>
+  <select id="themeSelect" onchange="applyTheme()">
+    <option value="theme-light">Claro</option>
+    <option value="theme-dark" selected>Oscuro</option>
+    <option value="theme-neon">Neón Azul</option>
+    <option value="neon-green">Neón Verde</option>
+    <option value="neon-pink">Neón Rosa</option>
+    <option value="neon-orange">Neón Naranja</option>
+  </select>
+
+</div>
+
+<script src="app.js"></script>
+<script src="sw.js"></script>
+</body>
+</html>
