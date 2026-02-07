@@ -1,84 +1,127 @@
-var exp = "";
-var history = [];
+// VARIABLES GLOBALES
+let exp = "";
+let history = [];
 
-// CARGAR HISTORIAL
+// CARGAR HISTORIAL DESDE LOCALSTORAGE
 (function loadHistory() {
   try {
-    var h = localStorage.getItem("calcHistory");
-    if(h && h!=="undefined" && h!=="null"){
-      var parsed = JSON.parse(h);
+    const h = localStorage.getItem("calcHistory");
+    if(h) {
+      const parsed = JSON.parse(h);
       if(Array.isArray(parsed)) history = parsed;
     }
-  } catch(e){ history=[]; }
+  } catch(e) { history = []; }
 })();
 
-// PANTALLA
-function screen(){ return document.getElementById("screen"); }
+// REFERENCIAS
+const screenEl = document.getElementById("screen");
+const historyEl = document.getElementById("historyList");
 
-// ACTUALIZAR HISTORIAL
-function updateHistoryUI(){
-  var list = document.getElementById("historyList");
-  if(!list) return;
-  list.innerHTML="";
-  if(!Array.isArray(history)) history=[];
-  for(var i=history.length-1;i>=0;i--){
-    var li=document.createElement("li");
-    li.textContent=history[i];
-    list.appendChild(li);
+// ACTUALIZAR HISTORIAL EN PANTALLA
+function updateHistoryUI() {
+  if(!Array.isArray(history)) history = [];
+  historyEl.innerHTML = "";
+  for(let i = history.length - 1; i >= 0; i--) {
+    const li = document.createElement("li");
+    li.textContent = history[i];
+    historyEl.appendChild(li);
   }
 }
 updateHistoryUI();
 
-// BOTONES
-function add(v){ exp+=v; screen().value=exp; }
-function clearAll(){ exp=""; screen().value=""; }
-function del(){ exp=exp.slice(0,-1); screen().value=exp; }
+// FUNCIÓN PARA AGREGAR CARACTERES
+function add(value) {
+  exp += value;
+  screenEl.value = exp;
+}
 
-// PARSEAR EXPRESIÓN
-function parseExpression(e){
+// BORRAR TODO
+function clearAll() {
+  exp = "";
+  screenEl.value = "";
+}
+
+// BORRAR ÚLTIMO
+function del() {
+  exp = exp.slice(0, -1);
+  screenEl.value = exp;
+}
+
+// VALIDAR EXPRESIÓN
+function isValidExpression(e) {
+  if(!e) return false;
+  return !/[+\-*/]$/.test(e); // no termina con operador
+}
+
+// PARSEAR EXPRESIÓN PARA JS
+function parseExpression(e) {
+  // Reemplazar símbolos × ÷
   e = e.replace(/×/g,"*").replace(/÷/g,"/");
-  e = e.replace(/(\d+(?:\.\d+)?)%(\d+(?:\.\d+)?)/g,function(_,a,b){
-    return "("+a+"*"+b+"/100)";
-  });
+
+  // Manejo de porcentaje: "50%10" -> "(50*10/100)"
+  e = e.replace(/(\d+(?:\.\d+)?)%(\d+(?:\.\d+)?)/g, "($1*$2/100)");
+
+  // Manejo de porcentaje solo "50%" -> "50/100"
+  e = e.replace(/(\d+(?:\.\d+)?)%/g, "($1/100)");
+
   return e;
 }
 
-function isValidExpression(e){ return !/[+\-*/%]$/.test(e); }
-
 // CALCULAR
-function calc(){
-  if(!exp || !isValidExpression(exp)) return;
-  try{
-    var parsed = parseExpression(exp);
-    var result = Function('"use strict"; return ('+parsed+')')();
-    if(!Array.isArray(history)) history=[];
-    history.push(exp+" = "+result);
-    localStorage.setItem("calcHistory",JSON.stringify(history));
+function calc() {
+  if(!isValidExpression(exp)) return;
+  try {
+    const parsed = parseExpression(exp);
+
+    // Uso de Function() seguro
+    const result = Function('"use strict"; return (' + parsed + ')')();
+
+    // Guardar historial
+    history.push(`${exp} = ${result}`);
+    localStorage.setItem("calcHistory", JSON.stringify(history));
     updateHistoryUI();
-    exp=String(result);
-    screen().value=exp;
-  } catch(e){ screen().value="Error"; exp=""; }
+
+    // Mostrar resultado
+    exp = String(result);
+    screenEl.value = exp;
+  } catch(e) {
+    screenEl.value = "Error";
+    exp = "";
+  }
 }
 
-// HISTORIAL
-function clearHistory(){ history=[]; localStorage.removeItem("calcHistory"); updateHistoryUI(); }
+// BORRAR HISTORIAL
+function clearHistory() {
+  history = [];
+  localStorage.removeItem("calcHistory");
+  updateHistoryUI();
+}
 
 // MODO CIENTÍFICO
-function sci(type){
-  if(!exp) return;
-  var v = Number(exp), r;
-  if(type==="sin") r=Math.sin(v);
-  if(type==="cos") r=Math.cos(v);
-  if(type==="tan") r=Math.tan(v);
-  if(type==="sqrt") r=Math.sqrt(v);
-  if(type==="pow") r=v*v;
-  if(type==="pi") r=Math.PI;
-  exp=String(r); screen().value=exp;
+function toggleSci() {
+  document.getElementById("scientific").classList.toggle("hidden");
 }
-function toggleSci(){ document.getElementById("scientific").classList.toggle("hidden"); }
 
-// TEMAS
-function applyTheme(){
-  var value = document.getElementById("themeSelect").value;
+function sci(type) {
+  if(!exp) return;
+  const v = Number(exp);
+  let r;
+  switch(type) {
+    case "sin": r = Math.sin(v); break;
+    case "cos": r = Math.cos(v); break;
+    case "tan": r = Math.tan(v); break;
+    case "sqrt": r = Math.sqrt(v); break;
+    case "pow": r = Math.pow(v,2); break;
+    case "pi": r = Math.PI; break;
+    default: r = v;
+  }
+  exp = String(r);
+  screenEl.value = exp;
+}
+
+// CAMBIO DE TEMAS CON SELECT
+function applyTheme() {
+  const select = document.getElementById("themeSelect");
+  const value = select.value;
   document.body.className = value;
 }
